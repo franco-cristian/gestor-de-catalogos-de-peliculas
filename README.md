@@ -23,8 +23,8 @@ Aplicación de escritorio para gestionar catálogos de películas, desarrollada 
 
 1. Clonar el repositorio:
    ```bash
-   git clone https://github.com/tu-usuario/tu-repositorio.git
-   cd tu-repositorio
+   git clone https://github.com/franco-cristian/gestor-de-catalogos-de-peliculas
+   cd gestor-de-catalogos-de-peliculas
     ```    
 2. Crear y activar entorno virtual (recomendado):
    ```bash
