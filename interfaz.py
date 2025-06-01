@@ -19,31 +19,38 @@ class GestorCatalogoApp(QMainWindow):
         self.setGeometry(100, 100, 900, 700)
         self.setMinimumSize(800, 600)
         
+        # Intentar establecer el ícono
         try:
             self.setWindowIcon(QIcon("icon.png"))
         except:
             pass
         
+        # Crear directorio principal si no existe
         os.makedirs("catalogos", exist_ok=True)
         
+        # Configurar widget central
         self.central_widget = QStackedWidget()
         self.setCentralWidget(self.central_widget)
         
+        # Crear páginas
         self.pagina_inicio = self.crear_pagina_inicio()
         self.pagina_menu = self.crear_pagina_menu()
         self.pagina_agregar = self.crear_pagina_agregar()
         self.pagina_listar = self.crear_pagina_listar()
         self.pagina_detalle = self.crear_pagina_detalle()
         
+        # Agregar páginas al widget apilado
         self.central_widget.addWidget(self.pagina_inicio)
         self.central_widget.addWidget(self.pagina_menu)
         self.central_widget.addWidget(self.pagina_agregar)
         self.central_widget.addWidget(self.pagina_listar)
         self.central_widget.addWidget(self.pagina_detalle)
         
+        # Variables de estado
         self.catalogo_actual = None
         self.ruta_portada_temporal = ""
         
+        # Mostrar página de inicio
         self.central_widget.setCurrentIndex(0)
     
     def crear_pagina_inicio(self):
@@ -52,11 +59,13 @@ class GestorCatalogoApp(QMainWindow):
         layout.setAlignment(Qt.AlignCenter)
         layout.setSpacing(20)
         
+        # Título
         titulo = QLabel("GESTOR DE CATÁLOGOS DE PELÍCULAS")
         titulo.setFont(QFont("Arial", 20, QFont.Bold))
         titulo.setAlignment(Qt.AlignCenter)
         layout.addWidget(titulo)
-
+        
+        # Entrada de catálogo
         entrada_layout = QHBoxLayout()
         entrada_layout.setAlignment(Qt.AlignCenter)
         
@@ -72,6 +81,7 @@ class GestorCatalogoApp(QMainWindow):
         
         layout.addLayout(entrada_layout)
         
+        # Botones
         botones_layout = QHBoxLayout()
         botones_layout.setAlignment(Qt.AlignCenter)
         
@@ -84,6 +94,7 @@ class GestorCatalogoApp(QMainWindow):
         
         layout.addLayout(botones_layout)
         
+        # Lista de catálogos existentes
         self.lista_catalogos = QListWidget()
         self.lista_catalogos.setFont(QFont("Arial", 11))
         self.lista_catalogos.setMinimumHeight(150)
@@ -102,16 +113,19 @@ class GestorCatalogoApp(QMainWindow):
         layout.setAlignment(Qt.AlignCenter)
         layout.setSpacing(20)
         
+        # Título del catálogo
         self.titulo_catalogo = QLabel()
         self.titulo_catalogo.setFont(QFont("Arial", 18, QFont.Bold))
         self.titulo_catalogo.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.titulo_catalogo)
         
+        # Estadísticas
         self.estadisticas = QLabel()
         self.estadisticas.setFont(QFont("Arial", 10))
         self.estadisticas.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.estadisticas)
         
+        # Botones
         btn_agregar = QPushButton("Agregar Película")
         btn_agregar.setFont(QFont("Arial", 12))
         btn_agregar.setStyleSheet("background-color: #2196F3; color: white; padding: 10px;")
@@ -147,11 +161,13 @@ class GestorCatalogoApp(QMainWindow):
         layout = QVBoxLayout()
         layout.setSpacing(15)
         
+        # Título
         titulo = QLabel("Agregar Nueva Película")
         titulo.setFont(QFont("Arial", 16, QFont.Bold))
         titulo.setAlignment(Qt.AlignCenter)
         layout.addWidget(titulo)
         
+        # Campos de entrada
         campos = [
             ("Título:", "entrada_titulo"),
             ("Género:", "entrada_genero"),
@@ -172,12 +188,14 @@ class GestorCatalogoApp(QMainWindow):
             
             layout.addLayout(campo_layout)
         
+        # Sinopsis
         layout.addWidget(QLabel("Sinopsis:"))
         self.entrada_sinopsis = QTextEdit()
         self.entrada_sinopsis.setFont(QFont("Arial", 11))
         self.entrada_sinopsis.setMaximumHeight(100)
         layout.addWidget(self.entrada_sinopsis)
         
+        # Portada
         portada_layout = QHBoxLayout()
         self.etiqueta_portada = QLabel("Sin portada seleccionada")
         self.etiqueta_portada.setFont(QFont("Arial", 10))
@@ -190,6 +208,7 @@ class GestorCatalogoApp(QMainWindow):
         
         layout.addLayout(portada_layout)
         
+        # Botones
         botones_layout = QHBoxLayout()
         
         btn_guardar = QPushButton("Guardar Película")
@@ -213,16 +232,19 @@ class GestorCatalogoApp(QMainWindow):
         pagina = QWidget()
         layout = QVBoxLayout()
         
+        # Título
         titulo = QLabel("Películas en el Catálogo")
         titulo.setFont(QFont("Arial", 16, QFont.Bold))
         titulo.setAlignment(Qt.AlignCenter)
         layout.addWidget(titulo)
         
+        # Lista de películas
         self.lista_peliculas = QListWidget()
         self.lista_peliculas.setFont(QFont("Arial", 12))
         self.lista_peliculas.itemDoubleClicked.connect(self.mostrar_detalle_pelicula)
         layout.addWidget(self.lista_peliculas)
         
+        # Botones
         botones_layout = QHBoxLayout()
         
         btn_eliminar = QPushButton("Eliminar Seleccionada")
@@ -246,20 +268,24 @@ class GestorCatalogoApp(QMainWindow):
         pagina = QWidget()
         layout = QVBoxLayout()
         layout.setSpacing(15)
-
+        
+        # Título
         self.titulo_detalle = QLabel()
         self.titulo_detalle.setFont(QFont("Arial", 18, QFont.Bold))
         self.titulo_detalle.setAlignment(Qt.AlignCenter)
         layout.addWidget(self.titulo_detalle)
         
+        # Contenedor principal
         contenedor = QHBoxLayout()
         
+        # Portada
         self.portada_detalle = QLabel()
         self.portada_detalle.setAlignment(Qt.AlignCenter)
         self.portada_detalle.setMinimumSize(300, 400)
         self.portada_detalle.setStyleSheet("background-color: #F0F0F0; border: 1px solid #CCCCCC;")
         contenedor.addWidget(self.portada_detalle)
         
+        # Información
         info_layout = QVBoxLayout()
         
         campos = [
@@ -282,6 +308,7 @@ class GestorCatalogoApp(QMainWindow):
             
             info_layout.addLayout(campo_layout)
         
+        # Sinopsis
         info_layout.addWidget(QLabel("Sinopsis:"))
         self.sinopsis_detalle = QTextEdit()
         self.sinopsis_detalle.setFont(QFont("Arial", 11))
@@ -291,6 +318,7 @@ class GestorCatalogoApp(QMainWindow):
         contenedor.addLayout(info_layout)
         layout.addLayout(contenedor)
         
+        # Botones
         botones_layout = QHBoxLayout()
         
         btn_volver = QPushButton("Volver a la Lista")
@@ -331,6 +359,7 @@ class GestorCatalogoApp(QMainWindow):
         self.estadisticas.setText(f"Total de películas: {count}")
     
     def mostrar_agregar_pelicula(self):
+        # Limpiar campos
         self.entrada_titulo.clear()
         self.entrada_genero.clear()
         self.entrada_anio.clear()
@@ -359,10 +388,12 @@ class GestorCatalogoApp(QMainWindow):
             QMessageBox.warning(self, "Error", "El título es obligatorio")
             return
         
+        # Verificar si ya existe
         if self.catalogo_actual.get_pelicula(titulo):
             QMessageBox.warning(self, "Error", f"Ya existe una película con el título '{titulo}'")
             return
         
+        # Crear nueva película
         nueva_pelicula = Pelicula(
             titulo=titulo,
             genero=self.entrada_genero.text().strip(),
@@ -431,6 +462,7 @@ class GestorCatalogoApp(QMainWindow):
         self.fecha_detalle.setText(pelicula.fecha_agregada)
         self.sinopsis_detalle.setText(pelicula.sinopsis or "Sin sinopsis disponible")
         
+        # Cargar portada si existe
         if pelicula.ruta_portada and os.path.exists(pelicula.ruta_portada):
             pixmap = QPixmap(pelicula.ruta_portada)
             if not pixmap.isNull():
@@ -438,6 +470,7 @@ class GestorCatalogoApp(QMainWindow):
                 self.portada_detalle.setPixmap(pixmap)
                 return
         
+        # Si no hay portada, mostrar placeholder
         self.portada_detalle.setText("Portada no disponible")
         
         self.central_widget.setCurrentIndex(4)

@@ -2,7 +2,7 @@ from datetime import datetime
 
 class Pelicula:
     def __init__(self, titulo, genero="", anio="", director="", sinopsis="", ruta_portada=""):
-        self.__titulo = titulo
+        self.__titulo = titulo  # Atributo privado
         self.genero = genero
         self.anio = anio
         self.director = director

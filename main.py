@@ -5,6 +5,7 @@ from interfaz import GestorCatalogoApp
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     
+    # Establecer estilo
     app.setStyle("Fusion")
     app.setStyleSheet("""
         QMainWindow {

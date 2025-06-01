@@ -28,6 +28,7 @@ class Catalogo:
         return peliculas
     
     def agregar_pelicula(self, pelicula):
+        # Copiar imagen de portada si existe
         if pelicula.ruta_portada and os.path.isfile(pelicula.ruta_portada):
             nombre_archivo = os.path.basename(pelicula.ruta_portada)
             destino = os.path.join(self.portadas_dir, nombre_archivo)
@@ -40,6 +41,7 @@ class Catalogo:
     def eliminar_pelicula(self, titulo):
         for i, pelicula in enumerate(self.peliculas):
             if pelicula.titulo == titulo:
+                # Eliminar imagen de portada si existe
                 if pelicula.ruta_portada and os.path.exists(pelicula.ruta_portada):
                     os.remove(pelicula.ruta_portada)
                 del self.peliculas[i]
