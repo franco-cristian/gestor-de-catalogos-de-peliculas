@@ -266,7 +266,7 @@ class GestorCatalogoApp(QMainWindow):
     
     def crear_pagina_detalle(self):
         pagina = QWidget()
-        layout = QVBoxLayout()
+        layout = QVBoxLayout(pagina)
         layout.setSpacing(15)
         
         # Título
@@ -282,7 +282,11 @@ class GestorCatalogoApp(QMainWindow):
         self.portada_detalle = QLabel()
         self.portada_detalle.setAlignment(Qt.AlignCenter)
         self.portada_detalle.setMinimumSize(300, 400)
-        self.portada_detalle.setStyleSheet("background-color: #F0F0F0; border: 1px solid #CCCCCC;")
+        self.portada_detalle.setStyleSheet("""
+            background-color: #F0F0F0; 
+            border: 1px solid #CCCCCC;
+            qproperty-alignment: 'AlignCenter';
+        """)
         contenedor.addWidget(self.portada_detalle)
         
         # Información
@@ -303,13 +307,19 @@ class GestorCatalogoApp(QMainWindow):
             
             valor = QLabel()
             valor.setFont(QFont("Arial", 11))
+            # Asegurar que el texto se muestre completamente
+            valor.setWordWrap(True)
+            valor.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
             setattr(self, nombre, valor)
             campo_layout.addWidget(valor)
             
             info_layout.addLayout(campo_layout)
         
         # Sinopsis
-        info_layout.addWidget(QLabel("Sinopsis:"))
+        sinopsis_label = QLabel("Sinopsis:")
+        sinopsis_label.setFont(QFont("Arial", 11, QFont.Bold))
+        info_layout.addWidget(sinopsis_label)
+        
         self.sinopsis_detalle = QTextEdit()
         self.sinopsis_detalle.setFont(QFont("Arial", 11))
         self.sinopsis_detalle.setReadOnly(True)
@@ -449,31 +459,73 @@ class GestorCatalogoApp(QMainWindow):
                 QMessageBox.warning(self, "Error", "No se pudo eliminar la película")
     
     def mostrar_detalle_pelicula(self, item):
-        titulo = item.data(Qt.UserRole)
+        titulo = item.text()
         pelicula = self.catalogo_actual.get_pelicula(titulo)
         
         if not pelicula:
             return
         
+        # Actualiza la interfaz
         self.titulo_detalle.setText(pelicula.titulo)
         self.genero_detalle.setText(pelicula.genero or "No especificado")
         self.anio_detalle.setText(pelicula.anio or "No especificado")
         self.director_detalle.setText(pelicula.director or "No especificado")
         self.fecha_detalle.setText(pelicula.fecha_agregada)
-        self.sinopsis_detalle.setText(pelicula.sinopsis or "Sin sinopsis disponible")
+        self.sinopsis_detalle.setPlainText(pelicula.sinopsis or "Sin sinopsis disponible")
         
-        # Cargar portada si existe
-        if pelicula.ruta_portada and os.path.exists(pelicula.ruta_portada):
-            pixmap = QPixmap(pelicula.ruta_portada)
-            if not pixmap.isNull():
-                pixmap = pixmap.scaled(300, 400, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-                self.portada_detalle.setPixmap(pixmap)
-                return
+        # Cargar imagen
+        self.cargar_portada(pelicula.ruta_portada)
         
-        # Si no hay portada, mostrar placeholder
-        self.portada_detalle.setText("Portada no disponible")
+        # Asegurar visibilidad
+        self.titulo_detalle.show()
+        self.genero_detalle.show()
+        self.anio_detalle.show()
+        self.director_detalle.show()
+        self.fecha_detalle.show()
+        self.sinopsis_detalle.show()
+        self.portada_detalle.show()
         
+        # Cambiar a la página de detalle
         self.central_widget.setCurrentIndex(4)
+        
+        # Forzar actualización
+        self.central_widget.update()
+        QApplication.processEvents()
+        
+        # Depuración adicional
+        print(f"Widgets ahora visibles: "
+            f"Título: {self.titulo_detalle.isVisible()}, "
+            f"Género: {self.genero_detalle.isVisible()}, "
+            f"Portada: {self.portada_detalle.isVisible()}")
+
+    def cargar_portada(self, ruta):
+        self.portada_detalle.clear()
+        
+        if ruta and os.path.exists(ruta):
+            try:
+                pixmap = QPixmap(ruta)
+                if not pixmap.isNull():
+                    pixmap = pixmap.scaled(300, 400, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+                    self.portada_detalle.setPixmap(pixmap)
+                    return
+            except Exception as e:
+                print(f"Error cargando imagen: {str(e)}")
+        
+        # Si no hay imagen válida
+        self.portada_detalle.setText("Portada no disponible")
+
+    def actualizar_contenido_detalle(self, pelicula):
+        self.titulo_detalle.repaint()
+        self.genero_detalle.repaint()
+        self.anio_detalle.repaint()
+        self.director_detalle.repaint()
+        self.fecha_detalle.repaint()
+        self.sinopsis_detalle.repaint()
+        self.portada_detalle.repaint()
+        
+        # Forzar un redibujado completo
+        self.pagina_detalle.update()
+        self.pagina_detalle.repaint()
     
     def eliminar_catalogo(self):
         respuesta = QMessageBox.question(

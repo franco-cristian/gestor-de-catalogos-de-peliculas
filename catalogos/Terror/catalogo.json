@@ -1,0 +1,20 @@
+[
+  {
+    "titulo": "Friday the 13th",
+    "genero": "Terror",
+    "anio": "1980",
+    "director": "Sean S. Cunningham",
+    "sinopsis": "Varios jóvenes pasan sus vacaciones en un campamento de verano, reabierto recientemente, y en el que unos años antes murió un joven ahogado en el lago. En poco tiempo, algunos de ellos son encontrados sin vida.",
+    "ruta_portada": "catalogos/Terror/portadas\\friday_the_13th.jpg",
+    "fecha_agregada": "2025-05-31 22:34"
+  },
+  {
+    "titulo": "A Nightmare on Elm Street",
+    "genero": "Terror",
+    "anio": "1984",
+    "director": "Wes Craven",
+    "sinopsis": "Varios jóvenes de una pequeña localidad tienen habitualmente pesadillas en las que son perseguidos por un hombre deformado por el fuego y que usa un guante terminado en afiladas cuchillas. Algunos de ellos comienzan a ser asesinados mientras duermen por este ser, que resulta ser un asesino al que los padres de estos jóvenes quemaron vivo hace varios años tras descubrir que había asesinado a varios niños.",
+    "ruta_portada": "catalogos/Terror/portadas\\a_nightmare_on_elm_street.jpg",
+    "fecha_agregada": "2025-05-31 22:38"
+  }
+]

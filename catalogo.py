@@ -1,6 +1,7 @@
 import os
 import json
 import shutil
+from pelicula import Pelicula
 
 class Catalogo:
     def __init__(self, nombre):
@@ -51,6 +52,7 @@ class Catalogo:
     
     def _guardar_peliculas(self):
         data = [p.to_dict() for p in self.peliculas]
+        print(f"Guardando {len(data)} películas")  # Debug
         with open(self.ruta_archivo, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
     
@@ -61,10 +63,25 @@ class Catalogo:
         return False
     
     def get_pelicula(self, titulo):
+        print(f"Buscando: {titulo}")  # Debug
         for pelicula in self.peliculas:
+            print(f"- {pelicula.titulo}")  # Debug
             if pelicula.titulo == titulo:
                 return pelicula
         return None
     
     def listar_peliculas(self):
         return sorted(self.peliculas, key=lambda x: x.titulo)
+    
+    def _cargar_peliculas(self):
+        peliculas = []
+        if os.path.exists(self.ruta_archivo):
+            try:
+                with open(self.ruta_archivo, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                    for pelicula_data in data:
+                        # Usamos la clase Pelicula importada
+                        peliculas.append(Pelicula.from_dict(pelicula_data))
+            except Exception as e:
+                print(f"Error cargando películas: {str(e)}")  # Mensaje mejorado
+        return peliculas
